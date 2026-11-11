@@ -62,7 +62,7 @@ jobs:
           name: demo-evidence
           path: |
             evaluation/results/
-            docs/screenshots/
+            screenshots/
             compose.log
             apps/frontend/playwright-report/
       - if: always()

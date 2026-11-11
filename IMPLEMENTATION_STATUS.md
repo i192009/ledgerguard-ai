@@ -45,7 +45,7 @@ Verified locally on **11 November 2026**. UI: **http://localhost:3000**. API doc
 | `python scripts/load_test.py --requests 100 --concurrency 5` | 100 successful reads; 2.955 seconds elapsed, p50 91.21 ms, p95 694.88 ms |
 | Prometheus profile and `/api/v1/targets` | Private authenticated API scrape **up**, no last error |
 
-Evidence: [demo JSON](evaluation/results/demo.json), [downloaded PDF](evaluation/results/demo.pdf), [PostgreSQL](evaluation/results/postgres.json), [dataset](evaluation/results/dataset.json), [offline routing](evaluation/results/offline.json), [load](evaluation/results/load.json), and [screenshots](docs/screenshots/).
+Evidence: [demo JSON](evaluation/results/demo.json), [downloaded PDF](evaluation/results/demo.pdf), [PostgreSQL](evaluation/results/postgres.json), [dataset](evaluation/results/dataset.json), [offline routing](evaluation/results/offline.json), [load](evaluation/results/load.json), and [screenshots](screenshots/).
 
 ## Final 10,000-record demonstration
 
@@ -67,6 +67,8 @@ The independent reviewer approved the duplicate proposal. Original source/origin
 - Frontend build succeeds with Vite's bundle-size advisory (about 878 kB before gzip). Code splitting remains an optimization.
 
 ## Reproduction and continuation state
+
+Result screenshots are organized in the top-level `screenshots/` folder with a gallery README. Playwright capture paths, CI artifact collection, documentation links and Docker exclusions point to that folder. All five existing PNG files were preserved byte-for-byte and their links verified; browser tests were not rerun for this path-only update.
 
 The workspace contains the local sandbox implementation, resolved lockfiles, documentation and measured artifacts. Services are running. Open the UI and use the README's development-only credentials. The demo duplicate has already been corrected; repeat its initial approval sequence using the explicit development reset in the README.
 

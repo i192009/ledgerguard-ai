@@ -18,8 +18,8 @@ Use a fresh development seed for the full duplicate-approval scenario. The autom
 
 The demo script also verifies approval replay returns 409 and that exactly one execution appears. PostgreSQL concurrency verification separately submits simultaneous decisions and executions. Before running the browser suite on a fresh database, run `docker compose exec api python scripts/prepare_browser_case.py`. A separate tenant supports an actual two-user UI approval without changing the 10,000-record demo tenant. Browser tests cover login, filters, risk charts, detail dialogs, PDF download, starting a review, refresh persistence, independent approval and mobile layout.
 
-![Operations workspace](screenshots/operations.png)
+![Operations workspace](../screenshots/operations.png)
 
-![Mobile overview](screenshots/mobile.png)
+![Mobile overview](../screenshots/mobile.png)
 
 To replay from the initial state, follow the explicit sandbox reset commands in the README. A normal subsequent review correctly sees the duplicate already voided and does not invent a new required correction.

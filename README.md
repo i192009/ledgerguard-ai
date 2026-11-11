@@ -6,7 +6,9 @@ LedgerGuard analyses synthetic transactions, produces explainable risk indicator
 
 This repository is a runnable portfolio platform, not a banking integration. It never connects to a live bank or transfers funds. See [implementation status](IMPLEMENTATION_STATUS.md) for executed checks and verification limits, and [demo evidence](evaluation/results/demo.json) for measured results.
 
-![LedgerGuard dashboard](docs/screenshots/overview.png)
+![LedgerGuard dashboard](screenshots/overview.png)
+
+[View all result screenshots](screenshots/README.md).
 
 ## Start the complete application
 

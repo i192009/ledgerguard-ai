@@ -17,7 +17,7 @@ test("login, dashboard, filters, reports and responsive navigation", async ({
   await login(page);
   await expect(page.getByText("12,000", { exact: true })).toBeVisible();
   await page.screenshot({
-    path: "../../docs/screenshots/overview.png",
+    path: "../../screenshots/overview.png",
     fullPage: true,
   });
   await page.getByRole("link", { name: "Transactions", exact: true }).click();
@@ -38,7 +38,7 @@ test("login, dashboard, filters, reports and responsive navigation", async ({
     page.getByRole("heading", { name: "Risk distribution", exact: true }),
   ).toBeVisible();
   await page.screenshot({
-    path: "../../docs/screenshots/risk.png",
+    path: "../../screenshots/risk.png",
     fullPage: true,
   });
   await page.getByRole("link", { name: "Reports", exact: true }).click();
@@ -55,7 +55,7 @@ test("login, dashboard, filters, reports and responsive navigation", async ({
     page.getByRole("textbox", { name: "Analysis request" }),
   ).toBeVisible();
   await page.screenshot({
-    path: "../../docs/screenshots/operations.png",
+    path: "../../screenshots/operations.png",
     fullPage: true,
   });
   await page.setViewportSize({ width: 390, height: 844 });
@@ -70,7 +70,7 @@ test("login, dashboard, filters, reports and responsive navigation", async ({
     ),
   ).toBeTruthy();
   await page.screenshot({
-    path: "../../docs/screenshots/mobile.png",
+    path: "../../screenshots/mobile.png",
     fullPage: true,
   });
 });
@@ -126,7 +126,7 @@ test("independent reviewer approves through the UI and the graph resumes", async
   await reviewer.locator("tbody tr").first().getByRole("button").click();
   await expect(reviewer.getByRole("dialog")).toContainText("UI-DUP-001");
   await reviewer.screenshot({
-    path: "../../docs/screenshots/approval-review.png",
+    path: "../../screenshots/approval-review.png",
     fullPage: true,
   });
   await reviewer.getByRole("button", { name: "Approve", exact: true }).click();
