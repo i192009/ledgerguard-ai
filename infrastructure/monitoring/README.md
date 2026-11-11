@@ -1,0 +1,7 @@
+# Metrics and optional dashboards
+
+Start the optional collector with `docker compose --profile monitoring up -d prometheus`, then open http://localhost:9090. It scrapes the private API with a dedicated `METRICS_TOKEN`, materialized inside the collector with restrictive permissions. Set a unique random value in production; startup rejects the development default. Interactive admin/auditor access tokens can also read `/metrics`, scoped to their tenant. Never expose unauthenticated metrics to the public internet.
+
+Useful series: `ledgerguard_persisted_tool_executions{server,tool,status}`, `ledgerguard_mcp_calls_total{server,tool,status}`, `ledgerguard_mcp_duration_seconds`, `ledgerguard_run_duration_seconds`, `ledgerguard_http_duration_seconds`, `ledgerguard_llm_tokens_total{direction}`, and `ledgerguard_llm_estimated_cost_usd_total`. The persisted tool gauge aggregates database records across processes. Other counters/histograms are process-local; per-process scrape targets/aggregation are required for a multi-worker production deployment.
+
+Grafana panels can graph MCP failures, latency percentiles and HTTP errors. A minimal importable dashboard is included in `grafana-dashboard.json`; Grafana itself is optional and not deployed by Compose. No external monitoring deployment is claimed. LangSmith model tracing is independently configurable and disabled by default. Configuration follows the [official Prometheus authorization schema](https://prometheus.io/docs/prometheus/latest/configuration/configuration/).

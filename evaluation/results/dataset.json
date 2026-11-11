@@ -1,0 +1,38 @@
+{
+  "transactions": 12004,
+  "unique_source_ids": 12004,
+  "bank_entries": 10008,
+  "balances": {
+    "ACC-1042": {
+      "opening": "1000000.00",
+      "closing": "-3439254.32",
+      "currency": "GBP"
+    },
+    "ACC-1043": {
+      "opening": "1000000.00",
+      "closing": "-3912781.20",
+      "currency": "GBP"
+    },
+    "ACC-1044": {
+      "opening": "1000000.00",
+      "closing": "-3730824.04",
+      "currency": "USD"
+    },
+    "ACC-1045": {
+      "opening": "1000000.00",
+      "closing": "-3683322.08",
+      "currency": "EUR"
+    },
+    "ACC-BROWSER": {
+      "opening": "1000000.00",
+      "closing": "999500.00",
+      "currency": "GBP"
+    },
+    "9b346401-2d99-4119-8a00-da8b51e1d185": {
+      "opening": "1000000.00",
+      "closing": "999750.00",
+      "currency": "GBP"
+    }
+  },
+  "valid": true
+}

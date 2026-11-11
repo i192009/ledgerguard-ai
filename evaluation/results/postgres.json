@@ -1,0 +1,13 @@
+{
+  "postgresql": true,
+  "concurrent_votes": [
+    "accepted",
+    "denied"
+  ],
+  "concurrent_execution_rows": 1,
+  "execution_ids_equal": true,
+  "immutable_delete_blocked": [
+    "audit_logs",
+    "transactions"
+  ]
+}

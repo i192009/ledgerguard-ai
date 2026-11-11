@@ -1,0 +1,10 @@
+[
+  {"request":"Find transactions above £10,000 made in the last 24 hours.","risk":false,"reconciliation":false,"minimum":"10000"},
+  {"request":"Investigate unusual transaction activity for account ACC-1042.","risk":true,"reconciliation":false,"account":"ACC-1042"},
+  {"request":"Reconcile yesterday's transactions and identify outstanding items.","risk":false,"reconciliation":true},
+  {"request":"Explain why transaction TXN-000001 has a high-risk score.","risk":true,"reconciliation":false,"transaction":"TXN-000001"},
+  {"request":"Show pending reconciliation adjustments awaiting approval.","risk":false,"reconciliation":true},
+  {"request":"Generate a risk report for the last seven days.","risk":true,"reconciliation":false},
+  {"request":"Compare transaction anomalies across the last three months.","risk":true,"reconciliation":false},
+  {"request":"Prepare corrections for duplicate ledger entries but do not apply them without approval.","risk":false,"reconciliation":true}
+]

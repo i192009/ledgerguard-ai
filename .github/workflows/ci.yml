@@ -1,0 +1,69 @@
+name: LedgerGuard verification
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - run: uv sync --frozen
+      - run: uv run ruff check src tests scripts alembic evaluation
+      - run: uv run ruff format --check src tests scripts alembic evaluation
+      - run: uv run mypy src/ledgerguard
+      - run: uv run pytest -q
+        env:
+          PYTHONPATH: src
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: apps/frontend/package-lock.json
+      - run: npm ci
+      - run: npm audit --audit-level=high
+      - run: npm test
+      - run: npm run build
+  compose-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install httpx
+      - run: docker compose config --quiet
+      - run: docker compose up -d --build --wait --wait-timeout 240
+      - run: python scripts/demo.py --restart-worker
+      - run: docker compose exec -T api python scripts/verify_postgres.py
+      - run: docker compose exec -T api python scripts/prepare_browser_case.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci && npx playwright install --with-deps chromium && npm run test:e2e
+        working-directory: apps/frontend
+      - if: always()
+        run: docker compose logs --no-color > compose.log
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-evidence
+          path: |
+            evaluation/results/
+            docs/screenshots/
+            compose.log
+            apps/frontend/playwright-report/
+      - if: always()
+        run: docker compose down

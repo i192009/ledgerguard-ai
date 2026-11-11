@@ -1,0 +1,151 @@
+{
+  "mode": "offline deterministic planner",
+  "scenarios": 8,
+  "passed": 8,
+  "structured_output_valid": 8,
+  "routing_accuracy": 1.0,
+  "elapsed_seconds": 0.01324689999455586,
+  "results": [
+    {
+      "request": "Find transactions above \u00a310,000 made in the last 24 hours.",
+      "passed": true,
+      "plan": {
+        "start_date": "2026-11-10T12:23:29.566595Z",
+        "end_date": "2026-11-11T12:23:29.566595Z",
+        "transactions": true,
+        "risk": false,
+        "reconciliation": false,
+        "account_id": null,
+        "transaction_id": null,
+        "min_amount": "10000",
+        "compare_months": false,
+        "inspect_approvals": false,
+        "reason": "Deterministic offline planner; no model claims"
+      }
+    },
+    {
+      "request": "Investigate unusual transaction activity for account ACC-1042.",
+      "passed": true,
+      "plan": {
+        "start_date": "2026-11-11T00:00:00Z",
+        "end_date": "2026-11-11T23:59:59.999999Z",
+        "transactions": true,
+        "risk": true,
+        "reconciliation": false,
+        "account_id": "ACC-1042",
+        "transaction_id": null,
+        "min_amount": null,
+        "compare_months": false,
+        "inspect_approvals": false,
+        "reason": "Deterministic offline planner; no model claims"
+      }
+    },
+    {
+      "request": "Reconcile yesterday's transactions and identify outstanding items.",
+      "passed": true,
+      "plan": {
+        "start_date": "2026-11-10T00:00:00Z",
+        "end_date": "2026-11-10T23:59:59.999999Z",
+        "transactions": true,
+        "risk": false,
+        "reconciliation": true,
+        "account_id": null,
+        "transaction_id": null,
+        "min_amount": null,
+        "compare_months": false,
+        "inspect_approvals": false,
+        "reason": "Deterministic offline planner; no model claims"
+      }
+    },
+    {
+      "request": "Explain why transaction TXN-000001 has a high-risk score.",
+      "passed": true,
+      "plan": {
+        "start_date": null,
+        "end_date": null,
+        "transactions": true,
+        "risk": true,
+        "reconciliation": false,
+        "account_id": null,
+        "transaction_id": "TXN-000001",
+        "min_amount": null,
+        "compare_months": false,
+        "inspect_approvals": false,
+        "reason": "Deterministic offline planner; no model claims"
+      }
+    },
+    {
+      "request": "Show pending reconciliation adjustments awaiting approval.",
+      "passed": true,
+      "plan": {
+        "start_date": "2026-11-11T00:00:00Z",
+        "end_date": "2026-11-11T23:59:59.999999Z",
+        "transactions": true,
+        "risk": false,
+        "reconciliation": true,
+        "account_id": null,
+        "transaction_id": null,
+        "min_amount": null,
+        "compare_months": false,
+        "inspect_approvals": true,
+        "reason": "Deterministic offline planner; no model claims"
+      }
+    },
+    {
+      "request": "Generate a risk report for the last seven days.",
+      "passed": true,
+      "plan": {
+        "start_date": "2026-11-05T00:00:00Z",
+        "end_date": "2026-11-11T12:23:29.579542Z",
+        "transactions": true,
+        "risk": true,
+        "reconciliation": false,
+        "account_id": null,
+        "transaction_id": null,
+        "min_amount": null,
+        "compare_months": false,
+        "inspect_approvals": false,
+        "reason": "Deterministic offline planner; no model claims"
+      }
+    },
+    {
+      "request": "Compare transaction anomalies across the last three months.",
+      "passed": true,
+      "plan": {
+        "start_date": "2026-08-13T00:00:00Z",
+        "end_date": "2026-11-11T12:23:29.579542Z",
+        "transactions": true,
+        "risk": true,
+        "reconciliation": false,
+        "account_id": null,
+        "transaction_id": null,
+        "min_amount": null,
+        "compare_months": true,
+        "inspect_approvals": false,
+        "reason": "Deterministic offline planner; no model claims"
+      }
+    },
+    {
+      "request": "Prepare corrections for duplicate ledger entries but do not apply them without approval.",
+      "passed": true,
+      "plan": {
+        "start_date": "2026-11-11T00:00:00Z",
+        "end_date": "2026-11-11T23:59:59.999999Z",
+        "transactions": true,
+        "risk": false,
+        "reconciliation": true,
+        "account_id": null,
+        "transaction_id": null,
+        "min_amount": null,
+        "compare_months": false,
+        "inspect_approvals": false,
+        "reason": "Deterministic offline planner; no model claims"
+      }
+    }
+  ],
+  "live_llm_routing": "not run",
+  "live_llm_grounding": "not run",
+  "live_llm_injection_resistance": "not run",
+  "live_llm_cost_and_latency": "not run",
+  "limitation": "Offline routing correctness does not establish live LLM quality"
+}

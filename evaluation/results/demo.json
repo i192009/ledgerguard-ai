@@ -1,0 +1,196 @@
+{
+  "run_id": "a4e32f25-ac63-4f75-be6a-27337191ebe7",
+  "status": "COMPLETED",
+  "transaction_count": 10000,
+  "historical_records_excluded_from_daily_review": true,
+  "risk": {
+    "analysed": 10000,
+    "counts": {
+      "HIGH": 183,
+      "MEDIUM": 9816,
+      "LOW": 1
+    },
+    "model_version": "iforest-v1-8f510e16f206:d8e17cca06:d26203623a",
+    "ml_available": true
+  },
+  "reconciliation": [
+    {
+      "ledger_records": 2500,
+      "bank_records": 2501,
+      "matched_ledger_records": 2498,
+      "matched_bank_records": 2497,
+      "match_groups": 2497,
+      "unmatched_ledger_records": 2,
+      "unmatched_bank_records": 4,
+      "exception_count": 3
+    },
+    {
+      "ledger_records": 2500,
+      "bank_records": 2501,
+      "matched_ledger_records": 2498,
+      "matched_bank_records": 2498,
+      "match_groups": 2498,
+      "unmatched_ledger_records": 2,
+      "unmatched_bank_records": 3,
+      "exception_count": 4
+    },
+    {
+      "ledger_records": 2500,
+      "bank_records": 2502,
+      "matched_ledger_records": 2499,
+      "matched_bank_records": 2500,
+      "match_groups": 2499,
+      "unmatched_ledger_records": 1,
+      "unmatched_bank_records": 2,
+      "exception_count": 3
+    },
+    {
+      "ledger_records": 2500,
+      "bank_records": 2502,
+      "matched_ledger_records": 2498,
+      "matched_bank_records": 2498,
+      "match_groups": 2498,
+      "unmatched_ledger_records": 2,
+      "unmatched_bank_records": 4,
+      "exception_count": 4
+    }
+  ],
+  "approval_count": 1,
+  "executions": [
+    {
+      "action_id": "9544fe83-dd8d-474b-8dbd-fb39e8976046",
+      "approval_id": "4cd48817-6292-478c-9e8e-88428de237fc",
+      "result": {
+        "sandbox": true,
+        "voided_ledger_id": "LED-000014",
+        "transaction_id": "TXN-000014",
+        "original_retained": "TXN-000002",
+        "amount": "-250.00"
+      },
+      "tenant_id": "tenant-demo",
+      "id": "95ea2fb2-5208-4727-9521-df08c42464e1",
+      "created_at": "2026-11-11T12:44:38.210516+00:00"
+    }
+  ],
+  "tool_calls": [
+    {
+      "server": "approvals",
+      "tool": "get_approval_status",
+      "duration_ms": 118,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "approvals",
+      "tool": "create_approval_request",
+      "duration_ms": 116,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "reconciliation",
+      "tool": "suggest_reconciliation_actions",
+      "duration_ms": 24,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "reconciliation",
+      "tool": "detect_reconciliation_discrepancies",
+      "duration_ms": 41,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "risk",
+      "tool": "detect_anomalous_transactions",
+      "duration_ms": 2168,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "reconciliation",
+      "tool": "start_reconciliation",
+      "duration_ms": 488,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "reconciliation",
+      "tool": "suggest_reconciliation_actions",
+      "duration_ms": 32,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "reconciliation",
+      "tool": "detect_reconciliation_discrepancies",
+      "duration_ms": 32,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "reconciliation",
+      "tool": "start_reconciliation",
+      "duration_ms": 425,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "reconciliation",
+      "tool": "suggest_reconciliation_actions",
+      "duration_ms": 34,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "reconciliation",
+      "tool": "detect_reconciliation_discrepancies",
+      "duration_ms": 28,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "reconciliation",
+      "tool": "start_reconciliation",
+      "duration_ms": 404,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "reconciliation",
+      "tool": "suggest_reconciliation_actions",
+      "duration_ms": 28,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "transactions",
+      "tool": "analyse_transaction_patterns",
+      "duration_ms": 366,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "reconciliation",
+      "tool": "detect_reconciliation_discrepancies",
+      "duration_ms": 31,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "reconciliation",
+      "tool": "start_reconciliation",
+      "duration_ms": 579,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "transactions",
+      "tool": "get_account_transaction_summary",
+      "duration_ms": 260,
+      "status": "COMPLETED"
+    },
+    {
+      "server": "transactions",
+      "tool": "list_accounts",
+      "duration_ms": 191,
+      "status": "COMPLETED"
+    }
+  ],
+  "analysis_seconds_before_human_decision": 2.577,
+  "analysis_records_per_second": 3880.37,
+  "total_seconds_including_approval_and_restart": 29.521,
+  "verification_script_seconds": 38.329,
+  "worker_restarted_during_pause": true,
+  "maker_denied": true,
+  "decision_replay_denied": true,
+  "pdf_bytes": 112240,
+  "report_download_audited": true,
+  "llm_mode": "offline",
+  "paid_llm_evaluation": "not run"
+}

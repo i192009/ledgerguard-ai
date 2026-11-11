@@ -1,0 +1,22 @@
+{
+  "verified_date": "2026-11-11",
+  "python_windows": {
+    "passed": 59,
+    "seconds": 55.32
+  },
+  "python_linux_container": {
+    "passed": 59,
+    "seconds": 35.16
+  },
+  "vitest_passed": 3,
+  "playwright_passed": 3,
+  "playwright_seconds": 19.1,
+  "ruff": "passed",
+  "mypy_source_files": 21,
+  "frontend_build": "passed",
+  "npm_audit_vulnerabilities": 0,
+  "prometheus_target": "up",
+  "live_llm": "not run",
+  "aws_deployment": "not run",
+  "github_actions_remote": "not triggered"
+}

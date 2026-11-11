@@ -1,0 +1,161 @@
+name: ledgerguard
+x-python: &python
+  build: .
+  image: ledgerguard-python:local
+  restart: unless-stopped
+  environment: &env
+    DATABASE_URL: postgresql+asyncpg://ledgerguard:${POSTGRES_PASSWORD:-local-sandbox-only}@postgres:5432/ledgerguard
+    REDIS_URL: redis://redis:6379/0
+    APP_ENV: ${APP_ENV:-development}
+    DEMO_MODE: ${DEMO_MODE:-true}
+    TASK_MODE: celery
+    SEED_TRANSACTION_COUNT: ${SEED_TRANSACTION_COUNT:-10000}
+    JWT_SECRET_KEY: ${JWT_SECRET_KEY:-development-only-change-this-secret-before-deployment-123456}
+    MCP_CONTEXT_SECRET: ${MCP_CONTEXT_SECRET:-dev-delegation-key-distinct-from-access-secret-change-me}
+    MCP_TRANSACTIONS_TOKEN: ${MCP_TRANSACTIONS_TOKEN:-dev-transactions-secret-change-me}
+    MCP_RISK_TOKEN: ${MCP_RISK_TOKEN:-dev-risk-secret-change-me}
+    MCP_RECONCILIATION_TOKEN: ${MCP_RECONCILIATION_TOKEN:-dev-reconciliation-secret-change-me}
+    MCP_APPROVALS_TOKEN: ${MCP_APPROVALS_TOKEN:-dev-approvals-secret-change-me}
+    MCP_TRANSACTIONS_URL: http://mcp-transactions:8101/mcp
+    MCP_RISK_URL: http://mcp-risk:8102/mcp
+    MCP_RECONCILIATION_URL: http://mcp-reconciliation:8103/mcp
+    MCP_APPROVALS_URL: http://mcp-approvals:8104/mcp
+    LLM_PROVIDER: ${LLM_PROVIDER:-offline}
+    LLM_MODEL: ${LLM_MODEL:-}
+    OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    LANGSMITH_TRACING: ${LANGSMITH_TRACING:-false}
+    LANGSMITH_API_KEY: ${LANGSMITH_API_KEY:-}
+    LANGSMITH_PROJECT: ledgerguard
+    METRICS_TOKEN: ${METRICS_TOKEN:-dev-monitoring-secret-change-me-before-deployment}
+    ARTIFACTS_DIR: /app/artifacts
+  volumes:
+    - model_artifacts:/app/artifacts
+  networks: [internal]
+  depends_on:
+    init: {condition: service_completed_successfully}
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ledgerguard
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-sandbox-only}
+      POSTGRES_DB: ledgerguard
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    ports: ["127.0.0.1:15432:5432"]
+    networks: [internal]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U ledgerguard -d ledgerguard"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: [redis-server, --appendonly, "yes"]
+    volumes: [redis_data:/data]
+    ports: ["127.0.0.1:16379:6379"]
+    networks: [internal]
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  init:
+    <<: *python
+    restart: "no"
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+    command: [sh, -c, "alembic upgrade head && python -m ledgerguard.cli bootstrap"]
+  api:
+    <<: *python
+    ports: ["127.0.0.1:8088:8000"]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready')"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+  mcp-transactions:
+    <<: *python
+    command: [python, -m, ledgerguard.mcp_server, transactions, --port, "8101"]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8101/health/ready')"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+  mcp-risk:
+    <<: *python
+    command: [python, -m, ledgerguard.mcp_server, risk, --port, "8102"]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8102/health/ready')"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+  mcp-reconciliation:
+    <<: *python
+    command: [python, -m, ledgerguard.mcp_server, reconciliation, --port, "8103"]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8103/health/ready')"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+  mcp-approvals:
+    <<: *python
+    command: [python, -m, ledgerguard.mcp_server, approvals, --port, "8104"]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8104/health/ready')"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+  worker:
+    <<: *python
+    depends_on:
+      init: {condition: service_completed_successfully}
+      mcp-transactions: {condition: service_healthy}
+      mcp-risk: {condition: service_healthy}
+      mcp-reconciliation: {condition: service_healthy}
+      mcp-approvals: {condition: service_healthy}
+    command: [celery, -A, ledgerguard.workers:celery, worker, --loglevel=INFO, --concurrency=2]
+    healthcheck:
+      test: [CMD-SHELL, "celery -A ledgerguard.workers:celery inspect ping -d celery@$$HOSTNAME --timeout 5"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  beat:
+    <<: *python
+    command: [celery, -A, ledgerguard.workers:celery, beat, --loglevel=INFO, --schedule=/tmp/celerybeat]
+  frontend:
+    build: ./apps/frontend
+    restart: unless-stopped
+    ports: ["127.0.0.1:3000:80"]
+    depends_on:
+      api: {condition: service_healthy}
+    networks: [internal]
+    healthcheck:
+      test: [CMD, wget, -q, --spider, http://127.0.0.1/]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    profiles: [monitoring]
+    restart: unless-stopped
+    environment:
+      METRICS_TOKEN: ${METRICS_TOKEN:-dev-monitoring-secret-change-me-before-deployment}
+    entrypoint: [sh, -c]
+    command: ['umask 077; printf "%s" "$$METRICS_TOKEN" > /tmp/metrics-token; exec /bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus']
+    volumes:
+      - ./infrastructure/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports: ["127.0.0.1:9090:9090"]
+    networks: [internal]
+    depends_on:
+      api: {condition: service_healthy}
+volumes:
+  prometheus_data:
+  postgres_data:
+  redis_data:
+  model_artifacts:
+networks:
+  internal:

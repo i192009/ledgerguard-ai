@@ -1,0 +1,42 @@
+[project]
+name = "ledgerguard-ai"
+version = "0.1.0"
+description = "Sandbox financial operations with durable agents and governed MCP tools"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+  "fastapi>=0.115,<1", "uvicorn[standard]>=0.34,<1", "pydantic-settings>=2.8,<3",
+  "sqlalchemy[asyncio]>=2.0.38,<3", "asyncpg>=0.30,<1", "aiosqlite>=0.21,<1",
+  "alembic>=1.15,<2", "psycopg[binary,pool]>=3.2,<4", "redis>=5,<8",
+  "celery[redis]>=5.4,<6", "httpx>=0.28,<1", "PyJWT>=2.10,<3",
+  "pwdlib[argon2]>=0.2,<1", "python-multipart>=0.0.20,<1",
+  "mcp>=1.20,<2", "langchain>=1.0,<2", "langchain-openai>=1.0,<2",
+  "langgraph>=1.0,<2", "langgraph-checkpoint-postgres>=3,<4",
+  "langgraph-checkpoint-sqlite>=3,<4", "scikit-learn>=1.6,<2",
+  "pandas>=2.2,<3", "numpy>=2,<3", "joblib>=1.4,<2",
+  "reportlab>=4.3,<5", "prometheus-client>=0.21,<1", "structlog>=25,<26",
+  "jsonschema>=4.23,<5", "langsmith>=0.4,<1"
+]
+[dependency-groups]
+dev = ["pytest>=8,<10", "pytest-asyncio>=0.25,<2", "ruff>=0.11,<1", "mypy>=1.15,<2", "types-reportlab", "types-jsonschema", "types-PyYAML"]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[tool.hatch.build.targets.wheel]
+packages = ["src/ledgerguard"]
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["tests"]
+[tool.ruff]
+target-version = "py312"
+line-length = 110
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "B"]
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.File"]
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+check_untyped_defs = true
+exclude = ["alembic", "tests"]

@@ -1,0 +1,122 @@
+{
+  "family": "ledgerguard-api",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "EXECUTION_ROLE_ARN",
+  "taskRoleArn": "TASK_ROLE_ARN",
+  "runtimePlatform": {
+    "operatingSystemFamily": "LINUX",
+    "cpuArchitecture": "ARM64"
+  },
+  "containerDefinitions": [
+    {
+      "name": "api",
+      "image": "ECR_IMAGE_DIGEST",
+      "essential": true,
+      "command": [
+        "uvicorn",
+        "ledgerguard.api:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000"
+      ],
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "APP_ENV",
+          "value": "production"
+        },
+        {
+          "name": "DEMO_MODE",
+          "value": "false"
+        },
+        {
+          "name": "TASK_MODE",
+          "value": "celery"
+        },
+        {
+          "name": "MCP_TRANSACTIONS_URL",
+          "value": "http://mcp-transactions.ledgerguard.internal:8101/mcp"
+        },
+        {
+          "name": "MCP_RISK_URL",
+          "value": "http://mcp-risk.ledgerguard.internal:8102/mcp"
+        },
+        {
+          "name": "MCP_RECONCILIATION_URL",
+          "value": "http://mcp-reconciliation.ledgerguard.internal:8103/mcp"
+        },
+        {
+          "name": "MCP_APPROVALS_URL",
+          "value": "http://mcp-approvals.ledgerguard.internal:8104/mcp"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "DATABASE_URL",
+          "valueFrom": "DATABASE_SECRET_ARN"
+        },
+        {
+          "name": "REDIS_URL",
+          "valueFrom": "REDIS_SECRET_ARN"
+        },
+        {
+          "name": "JWT_SECRET_KEY",
+          "valueFrom": "JWT_SECRET_ARN"
+        },
+        {
+          "name": "MCP_CONTEXT_SECRET",
+          "valueFrom": "DELEGATION_SECRET_ARN"
+        },
+        {
+          "name": "MCP_TRANSACTIONS_TOKEN",
+          "valueFrom": "TRANSACTIONS_SECRET_ARN"
+        },
+        {
+          "name": "MCP_RISK_TOKEN",
+          "valueFrom": "RISK_SECRET_ARN"
+        },
+        {
+          "name": "MCP_RECONCILIATION_TOKEN",
+          "valueFrom": "RECONCILIATION_SECRET_ARN"
+        },
+        {
+          "name": "MCP_APPROVALS_TOKEN",
+          "valueFrom": "APPROVALS_SECRET_ARN"
+        },
+        {
+          "name": "METRICS_TOKEN",
+          "valueFrom": "METRICS_SECRET_ARN"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ledgerguard/api",
+          "awslogs-region": "AWS_REGION",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready')\""
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 30
+      }
+    }
+  ]
+}
